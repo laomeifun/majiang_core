@@ -1,13 +1,18 @@
-// src/tile/mod.rs
-
-// 声明子模块
 mod types;
 mod tile;
 mod display;
 
-// 重新导出需要公开的类型和函数
-pub use types::{Suit, Wind, Dragon, Flower};
-pub use tile::Tile;
+// 直接从 types 模块导出所需的类型
+pub use types::{Tile, Suit, Wind, Dragon, Flower};
 
-// 如果需要，可以导出特定的常量，但通常枚举和 Tile 结构体就足够了
-// pub use types::{MAN_START, PIN_START, ...};
+// 从 tile 模块导出其他公共项
+// pub use tile::*;
+
+// 从 display 模块导出显示相关功能
+pub use display::{
+    DisplayStyle, 
+    TileDisplay, 
+    ColorStyle, 
+    ColoredTileDisplay, 
+    TileGrid
+};

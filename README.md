@@ -61,7 +61,7 @@ majiang-core/
 │   ├── tile/               # 麻将牌表示模块
 │   │   ├── display.rs      # Tile 的显示逻辑 (如转为字符串 "1m", "東")
 │   │   ├── mod.rs          # tile 模块的入口和导出
-│   │   ├── tile.rs         # 定义 Tile 结构体
+│   │   ├── tile.rs         # 定义 tile方法
 │   │   └── types.rs        # 定义牌的类型枚举 (花色 Suit, 风 Wind, 箭牌 Dragon)
 │   └── wall/               # 牌墙管理模块
 │       ├── builder.rs      # 构建初始牌墙的逻辑 (生成牌, 洗牌)
