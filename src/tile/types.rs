@@ -8,7 +8,7 @@ pub enum Suit {
     Tiao, // 索子
 }
 
-/// 风牌
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Wind {
     East,
@@ -17,7 +17,7 @@ pub enum Wind {
     North,
 }
 
-/// 箭牌 (三元牌)
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Dragon {
     White, // 白板
