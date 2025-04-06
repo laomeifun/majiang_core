@@ -10,5 +10,6 @@ thiserror = "1.0"
 log = "0.4" # 日志接口
 strum = { version = "0.26", features = ["derive"] } # Enum 增强 (Display, FromStr etc.)
 rand = "0.8" # 随机数生成，用于洗牌等
+regex = "1.11.1"
 
 [dev-dependencies]
