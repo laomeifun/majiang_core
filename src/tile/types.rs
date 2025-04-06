@@ -57,6 +57,21 @@ pub enum Flower {
     Chrysanthemum, // 植物
 }
 
+
+/// 麻将牌类型，统一表示所有牌
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum TileType {
+    /// 数牌：花色和点数(1-9)
+    Suit(Suit, u8),
+    /// 风牌
+    Wind(Wind),
+    /// 三元牌（中发白）
+    Dragon(Dragon),
+    /// 花牌
+    Flower(Flower),
+}
+
+
 // --- Tile ID Constants ---
 // 0-8:   1m-9m
 // 9-17:  1p-9p

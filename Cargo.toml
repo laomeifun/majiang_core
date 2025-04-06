@@ -5,6 +5,10 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[profile.dev]
+warnings = false  # 在开发模式下忽略所有警告
+
+
 [dependencies]
 thiserror = "1.0"
 log = "0.4" # 日志接口
