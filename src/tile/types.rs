@@ -1,35 +1,60 @@
 // src/tile/types.rs
+use strum_macros::{Display, EnumString, EnumIter, AsRefStr, EnumCount};
 
 /// 数牌花色
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Display, EnumString, EnumIter, AsRefStr, EnumCount)]
 pub enum Suit {
+    #[strum(serialize = "万")]
     Wan, // 万子
+    #[strum(serialize = "筒")]
     Tong, // 筒子
+    #[strum(serialize = "条")]
     Tiao, // 索子
 }
 
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Display, EnumString, EnumIter, AsRefStr, EnumCount)]
 pub enum Wind {
+    #[strum(serialize = "东")]
     East,
+    #[strum(serialize = "南")]
     South,
+    #[strum(serialize = "西")]
     West,
+    #[strum(serialize = "北")]
     North,
 }
 
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Display, EnumString, EnumIter, AsRefStr, EnumCount)]
 pub enum Dragon {
+    #[strum(serialize = "白")]
     White, // 白板
+    #[strum(serialize = "发")]
     Green, // 发财
+    #[strum(serialize = "中")]
     Red,   // 红中
 }
 
 /// 花牌类型 (春夏秋冬梅兰竹菊)
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Display, EnumString, EnumIter, AsRefStr, EnumCount)]
 pub enum Flower {
-    Spring, Summer, Autumn, Winter, // 季节
-    Plum, Orchid, Bamboo, Chrysanthemum, // 植物
+    #[strum(serialize = "春")]
+    Spring, 
+    #[strum(serialize = "夏")]
+    Summer, 
+    #[strum(serialize = "秋")]
+    Autumn, 
+    #[strum(serialize = "冬")]
+    Winter, // 季节
+    #[strum(serialize = "梅")]
+    Plum, 
+    #[strum(serialize = "兰")]
+    Orchid, 
+    #[strum(serialize = "竹")]
+    Bamboo, 
+    #[strum(serialize = "菊")]
+    Chrysanthemum, // 植物
 }
 
 // --- Tile ID Constants ---
