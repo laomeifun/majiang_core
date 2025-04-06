@@ -69,10 +69,16 @@ majiang-core/
 │       └── mod.rs          # wall 模块入口, 定义 Wall 结构体及发牌逻辑
 ├── target/                 # 编译输出目录 (通常在 .gitignore 中忽略)
 └── tests/                  # 测试代码目录
-    ├── test_tile.rs        # tile 模块的单元/集成测试
-    └── common/             # 测试用的通用工具或数据
-        ├── ruel.rs         # (可能是 rule.rs 的拼写错误?) 测试规则相关的通用帮助函数
-        └── test_tile.rs    # 通用测试中与 tile 相关的部分
+    ├── tile/               # Tile 测试
+    ├── meld/               # Meld 测试
+    ├── hand/               # Hand 测试 (重点)
+    ├── wall/               # Wall 测试
+    ├── action/             # Action 测试
+    ├── player/             # Player 测试
+    ├── game/               # Game 测试
+    └── rules/              # Rules 测试 (按规则分子目录)
+        ├── riichi/         # 日本立直麻将规则测试
+        └── shanghai/       # 上海麻将规则测试
 
 # 说明
 这里展示了项目的主要结构及各文件/目录的作用。
