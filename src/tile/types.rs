@@ -173,11 +173,11 @@ impl Default for Tile {
 // 42:    百搭牌
 
 /// 万子起始ID (1万对应ID=0)
-pub(crate) const MAN_START: u8 = 0;
+pub(crate) const CHARACTER_START: u8 = 0;
 /// 筒子起始ID (1筒对应ID=9)
-pub(crate) const PIN_START: u8 = 9;
+pub(crate) const DOT_START: u8 = 9;
 /// 索子起始ID (1索对应ID=18)
-pub(crate) const SOU_START: u8 = 18;
+pub(crate) const BAMBOO_START: u8 = 18;
 /// 风牌起始ID (东风对应ID=27)
 pub(crate) const WIND_START: u8 = 27;
 /// 三元牌起始ID (白板对应ID=31)
@@ -192,8 +192,8 @@ pub(crate) const MAX_FLOWER_ID: u8 = 41;
 pub(crate) const JOKER_ID: u8 = 42;
 
 /// 红五万ID - 用于表示红宝牌
-pub(crate) const RED_MAN5_ID: u8 = MAN_START + 5 - 1; // 4
+pub(crate) const RED_MAN5_ID: u8 = CHARACTER_START + 5 - 1; // 4
 /// 红五筒ID - 用于表示红宝牌
-pub(crate) const RED_PIN5_ID: u8 = PIN_START + 5 - 1; // 13
+pub(crate) const RED_PIN5_ID: u8 = DOT_START + 5 - 1; // 13
 /// 红五索ID - 用于表示红宝牌
-pub(crate) const RED_SOU5_ID: u8 = SOU_START + 5 - 1; // 22
+pub(crate) const RED_SOU5_ID: u8 = BAMBOO_START + 5 - 1; // 22
