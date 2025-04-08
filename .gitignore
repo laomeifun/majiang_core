@@ -10,6 +10,6 @@
 
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
-/memory-bank/
-/clinerules/
+# /memory-bank/
+# /clinerules/
 
