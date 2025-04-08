@@ -10,7 +10,6 @@ warnings = false  # 在开发模式下忽略所有警告
 
 
 [dependencies]
-thiserror = "1.0"
 log = "0.4" # 日志接口
 strum = { version = "0.26", features = ["derive"] } # Enum 增强 (Display, FromStr etc.)
 strum_macros = "0.27.1"

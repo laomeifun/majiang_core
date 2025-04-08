@@ -2,7 +2,7 @@
 // 处理麻将中的岭上牌、宝牌指示牌和杠后补牌等特殊牌区
 
 use crate::tile::Tile;
-use crate::errors::{MajiangError, Result};
+use crate::errors::{MajiangError, MajiangResult};
 
 /// 岭上牌区的配置选项
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -59,8 +59,8 @@ impl DeadWall {
     /// * `config` - 岭上牌区配置
     /// 
     /// # 返回值
-    /// * `Result<Self>` - 成功则返回创建的岭上牌区，失败则返回错误
-    pub fn new(tiles: &mut Vec<Tile>, config: DeadWallConfig) -> Result<Self> {
+    /// * `MajiangResult<Self>` - 成功则返回创建的岭上牌区，失败则返回错误
+    pub fn new(tiles: &mut Vec<Tile>, config: DeadWallConfig) -> MajiangResult<Self> {
         match config {
             DeadWallConfig::None => Ok(Self {
                 tiles: Vec::new(),
@@ -99,7 +99,7 @@ impl DeadWall {
                 })
             },
             
-            DeadWallConfig::MCR { replacement_count } | DeadWallConfig::Shanghai { replacement_count } => {
+            DeadWallConfig::MCR { replacement_count: _ } | DeadWallConfig::Shanghai { replacement_count: _ } => {
                 let dead_wall_size = 16;  // 中式麻将标准岭上牌数量
                 
                 if tiles.len() < dead_wall_size {
@@ -134,8 +134,17 @@ impl DeadWall {
                 self.tiles.len() - self.revealed_indicator_indices.len()
             },
             DeadWallConfig::MCR { replacement_count } | DeadWallConfig::Shanghai { replacement_count } => {
-                // 中式麻将的补牌区通常位于岭上牌的前半部分
-                replacement_count as usize
+                // 中式麻将的补牌区通常有固定大小，但需要考虑已经取走的牌
+                // 初始补牌区大小是replacement_count，但实际剩余数量应该是计算结果
+                let original_size = replacement_count as usize;
+                let tiles_taken = 16 - self.tiles.len(); // 岭上牌初始16张，减去当前数量得到已取走的数量
+                
+                // 确保不会返回负数
+                if tiles_taken >= original_size {
+                    0
+                } else {
+                    original_size - tiles_taken
+                }
             }
         }
     }
@@ -143,8 +152,8 @@ impl DeadWall {
     /// 从岭上牌区取一张补牌(如杠后补牌或补花)
     /// 
     /// # 返回值
-    /// * `Result<Tile>` - 成功则返回取出的牌，失败则返回错误
-    pub fn draw_replacement_tile(&mut self) -> Result<Tile> {
+    /// * `MajiangResult<Tile>` - 成功则返回取出的牌，失败则返回错误
+    pub fn draw_replacement_tile(&mut self) -> MajiangResult<Tile> {
         match self.config {
             DeadWallConfig::None => {
                 Err(MajiangError::InvalidOperation("没有配置岭上牌区".to_string()))
@@ -159,15 +168,15 @@ impl DeadWall {
                 Ok(self.tiles.remove(self.tiles.len() - 1))
             },
             
-            DeadWallConfig::MCR { replacement_count } | DeadWallConfig::Shanghai { replacement_count } => {
+            DeadWallConfig::MCR { replacement_count: _ } | DeadWallConfig::Shanghai { replacement_count: _ } => {
                 // 中式麻将从补牌区取牌(通常是前8张)
-                let replacement_index = replacement_count as usize - 1;
-                
-                if replacement_index >= self.tiles.len() {
+                if self.tiles.is_empty() {
                     return Err(MajiangError::NotEnoughTiles);
                 }
                 
-                Ok(self.tiles.remove(replacement_index))
+                // 从最后一张牌开始取，与日麻保持一致
+                // 不直接使用replacement_count以避免越界风险
+                Ok(self.tiles.remove(self.tiles.len() - 1))
             }
         }
     }
@@ -175,8 +184,8 @@ impl DeadWall {
     /// 获取当前的宝牌指示牌(仅适用于日麻)
     /// 
     /// # 返回值
-    /// * `Result<Vec<&Tile>>` - 成功则返回宝牌指示牌列表，失败则返回错误
-    pub fn get_dora_indicators(&self) -> Result<Vec<&Tile>> {
+    /// * `MajiangResult<Vec<&Tile>>` - 成功则返回宝牌指示牌列表，失败则返回错误
+    pub fn get_dora_indicators(&self) -> MajiangResult<Vec<&Tile>> {
         match self.config {
             DeadWallConfig::Riichi { dora_indicators, .. } => {
                 let mut indicators = Vec::with_capacity(dora_indicators as usize);
@@ -198,8 +207,8 @@ impl DeadWall {
     /// 获取里宝牌指示牌(仅适用于日麻，通常在游戏结束时才会公开)
     /// 
     /// # 返回值
-    /// * `Result<Vec<&Tile>>` - 成功则返回里宝牌指示牌列表，失败则返回错误
-    pub fn get_uradora_indicators(&self) -> Result<Vec<&Tile>> {
+    /// * `MajiangResult<Vec<&Tile>>` - 成功则返回里宝牌指示牌列表，失败则返回错误
+    pub fn get_uradora_indicators(&self) -> MajiangResult<Vec<&Tile>> {
         match self.config {
             DeadWallConfig::Riichi { dora_indicators, uradora_indicators } => {
                 let mut indicators = Vec::with_capacity(uradora_indicators as usize);
@@ -222,8 +231,8 @@ impl DeadWall {
     /// 在杠牌后翻开新的宝牌指示牌(仅适用于日麻)
     /// 
     /// # 返回值
-    /// * `Result<&Tile>` - 成功则返回新翻开的宝牌指示牌，失败则返回错误
-    pub fn reveal_next_dora_indicator(&mut self) -> Result<&Tile> {
+    /// * `MajiangResult<&Tile>` - 成功则返回新翻开的宝牌指示牌，失败则返回错误
+    pub fn reveal_next_dora_indicator(&mut self) -> MajiangResult<&Tile> {
         match self.config {
             DeadWallConfig::Riichi { dora_indicators, .. } => {
                 let current_indicators = self.revealed_indicator_indices.len();

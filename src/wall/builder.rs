@@ -3,7 +3,7 @@
 
 use rand::prelude::*;
 use crate::tile::{Tile, Suit, Wind, Dragon, Flower};
-use crate::errors::{MajiangError, Result};
+use crate::errors::{MajiangError, MajiangResult};
 
 /// 表示不同类型的麻将牌组构成
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -45,8 +45,8 @@ impl Default for WallConfig {
 /// * `config` - 牌墙配置，指定使用哪种规则的牌组
 /// 
 /// # 返回值
-/// * `Result<Vec<Tile>>` - 成功则返回构建好的牌集，失败则返回错误
-pub fn build_tiles(config: WallConfig) -> Result<Vec<Tile>> {
+/// * `MaijiangResult<Vec<Tile>>` - 成功则返回构建好的牌集，失败则返回错误
+pub fn build_tiles(config: WallConfig) -> MajiangResult<Vec<Tile>> {
     match config {
         WallConfig::Riichi => build_riichi_tiles(),
         WallConfig::MCR => build_mcr_tiles(),
@@ -58,7 +58,7 @@ pub fn build_tiles(config: WallConfig) -> Result<Vec<Tile>> {
 }
 
 /// 构建日本麻将使用的牌组(无花牌)
-fn build_riichi_tiles() -> Result<Vec<Tile>> {
+fn build_riichi_tiles() -> MajiangResult<Vec<Tile>> {
     let mut tiles = Vec::with_capacity(136);
     
     // 添加4副数牌: 万子、筒子、索子
@@ -71,7 +71,7 @@ fn build_riichi_tiles() -> Result<Vec<Tile>> {
 }
 
 /// 构建中国官方麻将(MCR)使用的牌组(含花牌)
-fn build_mcr_tiles() -> Result<Vec<Tile>> {
+fn build_mcr_tiles() -> MajiangResult<Vec<Tile>> {
     let mut tiles = Vec::with_capacity(144);
     
     // 添加4副数牌: 万子、筒子、索子
@@ -87,7 +87,7 @@ fn build_mcr_tiles() -> Result<Vec<Tile>> {
 }
 
 /// 构建上海麻将使用的牌组(含花牌，可选百搭)
-fn build_shanghai_tiles(with_joker: bool) -> Result<Vec<Tile>> {
+fn build_shanghai_tiles(with_joker: bool) -> MajiangResult<Vec<Tile>> {
     let mut tiles = Vec::with_capacity(if with_joker { 145 } else { 144 });
     
     // 添加4副数牌: 万子、筒子、索子
@@ -108,9 +108,9 @@ fn build_shanghai_tiles(with_joker: bool) -> Result<Vec<Tile>> {
 }
 
 /// 构建自定义配置的牌组
-fn build_custom_tiles(flowers: u8, with_joker: bool, suit_sets: u8, honor_sets: u8) -> Result<Vec<Tile>> {
+fn build_custom_tiles(flowers: u8, with_joker: bool, suit_sets: u8, honor_sets: u8) -> MajiangResult<Vec<Tile>> {
     if flowers > 8 {
-        return Err(MajiangError::InvalidTileCount("花牌数量不能超过8张".to_string()));
+        return Err(MajiangError::RuleViolation("花牌数量不能超过8张".to_string()));
     }
     
     // 计算容量: 基本牌 + 花牌 + 可能的百搭
@@ -213,8 +213,8 @@ pub fn shuffle_tiles<R: Rng>(tiles: &mut [Tile], rng: &mut R) {
 /// * `seed` - 可选的随机数种子，用于测试或复现
 /// 
 /// # 返回值
-/// * `Result<Vec<Tile>>` - 洗好牌的麻将牌墙
-pub fn create_shuffled_tiles(config: WallConfig, seed: Option<u64>) -> Result<Vec<Tile>> {
+/// * `MaijiangResult<Vec<Tile>>` - 洗好牌的麻将牌墙
+pub fn create_shuffled_tiles(config: WallConfig, seed: Option<u64>) -> MajiangResult<Vec<Tile>> {
     let mut tiles = build_tiles(config)?;
     
     match seed {

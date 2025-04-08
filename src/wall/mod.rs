@@ -2,10 +2,8 @@
 // 提供牌墙的基本功能，包括初始化、洗牌、发牌和摸牌
 
 use std::collections::VecDeque;
-use rand::prelude::*;
-
 use crate::tile::Tile;
-use crate::errors::{MajiangError, Result};
+use crate::errors::{MajiangError, MajiangResult};
 
 // 导入子模块
 pub mod builder;
@@ -49,7 +47,7 @@ impl Wall {
         wall_config: WallConfig,
         dead_wall_config: Option<DeadWallConfig>,
         seed: Option<u64>
-    ) -> Result<Self> {
+    ) -> MajiangResult<Self> {
         // 创建洗好的牌集
         let mut tiles = builder::create_shuffled_tiles(wall_config, seed)?;
         
@@ -90,7 +88,7 @@ impl Wall {
     /// 
     /// # 返回值
     /// * `Result<Tile>` - 成功则返回摸到的牌，失败则返回错误
-    pub fn draw_tile(&mut self) -> Result<Tile> {
+    pub fn draw_tile(&mut self) -> MajiangResult<Tile> {
         if !self.game_started {
             return Err(MajiangError::InvalidOperation("游戏尚未开始，不能摸牌".to_string()));
         }
@@ -114,7 +112,7 @@ impl Wall {
     /// 
     /// # 返回值
     /// * `Result<Vec<Tile>>` - 成功则返回发出的牌组，失败则返回错误
-    pub fn deal_initial_hand(&mut self, count: usize) -> Result<Vec<Tile>> {
+    pub fn deal_initial_hand(&mut self, count: usize) -> MajiangResult<Vec<Tile>> {
         if self.game_started {
             return Err(MajiangError::InvalidOperation("游戏已经开始，不能发初始手牌".to_string()));
         }
@@ -142,7 +140,7 @@ impl Wall {
     /// 
     /// # 返回值
     /// * `Result<Tile>` - 成功则返回摸到的补牌，失败则返回错误
-    pub fn draw_replacement_tile(&mut self) -> Result<Tile> {
+    pub fn draw_replacement_tile(&mut self) -> MajiangResult<Tile> {
         if !self.game_started {
             return Err(MajiangError::InvalidOperation("游戏尚未开始，不能摸补牌".to_string()));
         }
@@ -166,7 +164,7 @@ impl Wall {
     /// 
     /// # 返回值
     /// * `Result<Vec<&Tile>>` - 成功则返回宝牌指示牌列表，失败则返回错误
-    pub fn get_dora_indicators(&self) -> Result<Vec<&Tile>> {
+    pub fn get_dora_indicators(&self) -> MajiangResult<Vec<&Tile>> {
         match &self.dead_wall {
             Some(dead_wall) => dead_wall.get_dora_indicators(),
             None => Err(MajiangError::InvalidOperation("该规则没有岭上牌区".to_string()))
@@ -177,7 +175,7 @@ impl Wall {
     /// 
     /// # 返回值
     /// * `Result<Vec<&Tile>>` - 成功则返回里宝牌指示牌列表，失败则返回错误
-    pub fn get_uradora_indicators(&self) -> Result<Vec<&Tile>> {
+    pub fn get_uradora_indicators(&self) -> MajiangResult<Vec<&Tile>> {
         match &self.dead_wall {
             Some(dead_wall) => dead_wall.get_uradora_indicators(),
             None => Err(MajiangError::InvalidOperation("该规则没有岭上牌区".to_string()))
@@ -188,7 +186,7 @@ impl Wall {
     /// 
     /// # 返回值
     /// * `Result<&Tile>` - 成功则返回新翻开的宝牌指示牌，失败则返回错误
-    pub fn reveal_next_dora_indicator(&mut self) -> Result<&Tile> {
+    pub fn reveal_next_dora_indicator(&mut self) -> MajiangResult<&Tile> {
         match &mut self.dead_wall {
             Some(dead_wall) => dead_wall.reveal_next_dora_indicator(),
             None => Err(MajiangError::InvalidOperation("该规则没有岭上牌区".to_string()))
