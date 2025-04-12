@@ -136,7 +136,7 @@ fn build_custom_tiles(flowers: u8, with_joker: bool, suit_sets: u8, honor_sets: 
 
 /// 添加指定副数的数牌(万子、筒子、索子)到牌集
 fn add_suit_tiles(tiles: &mut Vec<Tile>, sets: u8) {
-    let suits = [Suit::Character, Suit::Dot, Suit::Bamboo];
+    let suits: [Suit; 3] = [Suit::Character, Suit::Dot, Suit::Bamboo];
     
     for &suit in &suits {
         for _ in 0..sets {
