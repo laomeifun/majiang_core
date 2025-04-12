@@ -13,7 +13,7 @@ fn test_riichi_deadwall() {
     let mut wall = Wall::new(
         WallConfig::Riichi,
         Some(DeadWallConfig::Riichi { 
-            dora_indicators: 1,    // 1个表宝牌
+            dora_indicators: 2,    // 2个表宝牌
             uradora_indicators: 1  // 1个里宝牌
         }),
         None  // 随机种子
@@ -22,14 +22,14 @@ fn test_riichi_deadwall() {
     // 游戏开始
     wall.start_game();
     
-    // 获取宝牌指示牌
+    // 获取宝牌指示牌，初始只有第一个宝牌指示牌可见
     let dora_indicators = wall.get_dora_indicators().expect("获取宝牌指示牌失败");
     assert_eq!(dora_indicators.len(), 1);
     
-    // 进行一次杠操作，应该翻开一个新的宝牌指示牌
+    // 进行一次杠操作，翻开一个新的宝牌指示牌
     let _new_dora = wall.reveal_next_dora_indicator().expect("翻新宝牌失败");
     
-    // 现在应该有两个宝牌指示牌
+    // 现在应该有两个宝牌指示牌了（初始的一个 + 新翻的一个）
     let dora_indicators = wall.get_dora_indicators().expect("获取宝牌指示牌失败");
     assert_eq!(dora_indicators.len(), 2);
     
@@ -38,6 +38,13 @@ fn test_riichi_deadwall() {
     
     // 验证是否正确计数
     assert_eq!(wall.drawn_count(), 1);  // 杠后补牌也计入已摸牌数
+    
+    // 再次翻开宝牌指示牌应该失败，因为已经翻开了所有配置允许的宝牌
+    let result = wall.reveal_next_dora_indicator();
+    assert!(result.is_err());
+    if let Err(e) = result {
+        assert!(matches!(e, MajiangError::InvalidOperation(_)));
+    }
 }
 
 /// 测试日麻规则下的宝牌和里宝牌
@@ -62,7 +69,7 @@ fn test_riichi_dora_and_uradora() {
     
     // 获取里宝牌指示牌（通常游戏结束时才会公开）
     let uradora_indicators = wall.get_uradora_indicators().expect("获取里宝牌指示牌失败");
-    assert_eq!(uradora_indicators.len(), 3); // 都可以获取，但正常游戏中要等到荣和并且有立直棒才能看
+    assert_eq!(uradora_indicators.len(), 3); // 配置了3个里宝牌
     
     // 连续进行杠操作，应该翻开所有宝牌指示牌
     for i in 0..2 {

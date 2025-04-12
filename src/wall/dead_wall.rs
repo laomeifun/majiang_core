@@ -85,12 +85,10 @@ impl DeadWall {
                     }
                 }
                 
-                // 初始宝牌指示牌是第5张(索引4)
-                let mut revealed = Vec::with_capacity((dora_indicators + uradora_indicators) as usize);
-                // 初始只有表宝牌
-                for i in 0..dora_indicators as usize {
-                    revealed.push(i * 2);  // 表宝牌在岭上牌的偶数位置
-                }
+                // 初始化revealed_indicator_indices，开始时只显示第一个宝牌指示牌
+                let mut revealed = Vec::with_capacity((dora_indicators) as usize);
+                // 初始只显示第一个表宝牌
+                revealed.push(0); // 第一个表宝牌的索引为0
                 
                 Ok(Self {
                     tiles: dead_wall_tiles,
@@ -210,13 +208,15 @@ impl DeadWall {
     /// * `MajiangResult<Vec<&Tile>>` - 成功则返回里宝牌指示牌列表，失败则返回错误
     pub fn get_uradora_indicators(&self) -> MajiangResult<Vec<&Tile>> {
         match self.config {
-            DeadWallConfig::Riichi { dora_indicators, uradora_indicators } => {
+            DeadWallConfig::Riichi { dora_indicators: _, uradora_indicators } => {
                 let mut indicators = Vec::with_capacity(uradora_indicators as usize);
                 
                 // 里宝牌指示牌位于表宝牌指示牌的下一张
                 for i in 0..uradora_indicators as usize {
-                    if i < dora_indicators as usize && (i * 2 + 1) < self.tiles.len() {
-                        indicators.push(&self.tiles[i * 2 + 1]);
+                    // 计算里宝牌指示牌的索引：2*i+1
+                    let index = i * 2 + 1;
+                    if index < self.tiles.len() {
+                        indicators.push(&self.tiles[index]);
                     } else {
                         return Err(MajiangError::InvalidOperation("里宝牌指示牌索引越界".to_string()));
                     }

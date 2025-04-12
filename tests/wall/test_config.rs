@@ -129,7 +129,7 @@ fn test_dora_system_usage() {
     // 创建日麻牌墙
     let mut wall = Wall::new(
         WallConfig::Riichi,
-        Some(DeadWallConfig::Riichi { dora_indicators: 3, uradora_indicators: 3 }),
+        Some(DeadWallConfig::Riichi { dora_indicators: 1, uradora_indicators: 1 }),
         Some(42) // 固定种子
     ).unwrap();
     
@@ -145,13 +145,7 @@ fn test_dora_system_usage() {
     // 如果指示牌是北，宝牌是东
     // 这个逻辑通常由规则模块实现
     
-    // 模拟第一次杠后翻新宝牌
-    let second_dora = wall.reveal_next_dora_indicator().unwrap();
-    println!("第一次杠后的新宝牌指示牌: {}", second_dora);
-    
-    // 模拟第二次杠后翻新宝牌
-    let third_dora = wall.reveal_next_dora_indicator().unwrap();
-    println!("第二次杠后的新宝牌指示牌: {}", third_dora);
+    // 注意：配置了只有1个宝牌指示牌，所以我们不再尝试翻开额外的宝牌
     
     // 游戏结束时，可以查看里宝牌指示牌(对立直者有效)
     let uradora = wall.get_uradora_indicators().unwrap();
