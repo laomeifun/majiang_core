@@ -5,3 +5,4 @@
 // 导入tile测试模块
 mod tile;
 mod wall;
+mod meld;

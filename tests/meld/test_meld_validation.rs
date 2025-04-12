@@ -2,8 +2,7 @@
 //
 // 测试副露的验证功能，确保吃、碰、杠的规则被正确验证
 
-use majiang_core::errors::MajiangResult;
-use majiang_core::meld::{KanType, MeldSource, MeldType};
+use majiang_core::meld::{KanType, MeldSource};
 use majiang_core::meld::utils::{validate_chi, validate_pon, validate_kan};
 use majiang_core::tile::{Suit, Tile};
 

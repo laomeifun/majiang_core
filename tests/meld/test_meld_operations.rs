@@ -174,15 +174,22 @@ fn test_get_possible_chi_combinations() {
         Tile::new_suit(Suit::Bamboo, 4).unwrap(),
     ];
     
-    // 3万可以组成两种吃：(1万,2万,3万) 或 (3万,4万,5万)
-    let tile_3man = Tile::new_suit(Suit::Character, 3).unwrap();
-    let combinations = get_possible_chi_combinations(&hand_tiles, tile_3man);
+    println!("测试手牌: {:?}", hand_tiles);
     
-    assert_eq!(combinations.len(), 2);
+    // 3万可以组成三种吃：(1万,2万,3万)、(2万,3万,4万) 或 (3万,4万,5万)
+    let tile_3man = Tile::new_suit(Suit::Character, 3).unwrap();
+    println!("测试牌: {:?}", tile_3man);
+    
+    let combinations = get_possible_chi_combinations(&hand_tiles, tile_3man);
+    println!("3万可以组成的吃组合: {:?}", combinations);
+    println!("组合数量: {}", combinations.len());
+    
+    assert_eq!(combinations.len(), 3);
     
     // 5条只能组成一种吃：(3条,4条,5条)
     let tile_5sou = Tile::new_suit(Suit::Bamboo, 5).unwrap();
     let combinations2 = get_possible_chi_combinations(&hand_tiles, tile_5sou);
+    println!("5条可以组成的吃组合: {:?}", combinations2);
     
     assert_eq!(combinations2.len(), 1);
     
